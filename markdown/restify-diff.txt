@@ -1,0 +1,301 @@
+diff --git a/pom.xml b/pom.xml
+index 868ba18..4e94979 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -5,7 +5,7 @@
+     <artifactId>bookstoreinternals</artifactId>
+     <packaging>jar</packaging>
+     <version>1.0-SNAPSHOT</version>
+-    <name>bookstoreinternals</name>
++    <name>bookstoremanualrest</name>
+     <url>http://maven.apache.org</url>
+ 
+     <properties>
+@@ -14,6 +14,12 @@
+ 	<source>8</source>
+     </properties>
+ 
++    <!-- this parent block lets this maven project extend a prepared spring specific template.-->
++    <parent>
++        <groupId>org.springframework.boot</groupId>
++        <artifactId>spring-boot-starter-parent</artifactId>
++        <version>2.3.0.RELEASE</version>
++    </parent>
+ 
+     <!-- main developer -->
+     <developers>
+@@ -35,6 +41,14 @@
+     </licenses>
+ 
+     <dependencies>
++
++        <!-- This block adds spring boot as a dependency, so we can use the parent pom configuration and non-standard annotations.-->
++        <dependency>
++            <groupId>org.springframework.boot</groupId>
++            <artifactId>spring-boot-starter-web</artifactId>
++            <version>2.3.0.RELEASE</version>
++        </dependency>
++
+         <dependency>
+             <groupId>junit</groupId>
+             <artifactId>junit</artifactId>
+@@ -45,7 +59,7 @@
+ 
+     <build>
+         <!-- Override default name of generated jars -->
+-        <finalName>BookStore</finalName>
++        <finalName>BookStoreManualRest</finalName>
+ 
+         <plugins>
+             <!-- set compiler version -->
+@@ -65,37 +79,6 @@
+                 <version>2.22.2</version>
+             </plugin>
+ 
+-            <!-- specify main class for exec goal -->
+-            <plugin>
+-                <groupId>org.codehaus.mojo</groupId>
+-                <artifactId>exec-maven-plugin</artifactId>
+-                <version>1.6.0</version>
+-                <executions>
+-                    <execution>
+-                        <goals>
+-                            <goal>java</goal>
+-                        </goals>
+-                    </execution>
+-                </executions>
+-                <configuration>
+-                    <mainClass>eu.kartoffelquadrat.bookstoreinternals.DesktopLauncher</mainClass>
+-                </configuration>
+-            </plugin>
+-
+-            <!-- specify main class for JAR manifest-->
+-            <plugin>
+-                <groupId>org.apache.maven.plugins</groupId>
+-                <artifactId>maven-jar-plugin</artifactId>
+-                <version>3.2.0</version>
+-                <configuration>
+-                    <archive>
+-                        <manifest>
+-                            <mainClass>eu.kartoffelquadrat.bookstoreinternals.DesktopLauncher</mainClass>
+-                        </manifest>
+-                    </archive>
+-                </configuration>
+-            </plugin>
+-
+             <!-- add sources -->
+             <plugin>
+                 <groupId>org.apache.maven.plugins</groupId>
+@@ -125,6 +108,23 @@
+                     </execution>
+                 </executions>
+             </plugin>
++
++	    <!-- Spring specific build plugin, produces self contained JAR with default launcher class.-->
++	    <plugin>
++		<groupId>org.springframework.boot</groupId>
++		<artifactId>spring-boot-maven-plugin</artifactId>
++		<configuration>
++		    <fork>true</fork>
++		    <mainClass>eu.kartoffelquadrat.bookstoreinternals.RestLauncher</mainClass>
++		</configuration>
++		<executions>
++		    <execution>
++			<goals>
++			    <goal>repackage</goal>
++			</goals>
++		    </execution>
++		</executions>
++	    </plugin>
+         </plugins>
+     </build>
+ </project>
+diff --git a/src/main/java/eu/kartoffelquadrat/bookstoreinternals/AssortmentImpl.java b/src/main/java/eu/kartoffelquadrat/bookstoreinternals/AssortmentImpl.java
+index 27a8cc7..5ef9c82 100644
+--- a/src/main/java/eu/kartoffelquadrat/bookstoreinternals/AssortmentImpl.java
++++ b/src/main/java/eu/kartoffelquadrat/bookstoreinternals/AssortmentImpl.java
+@@ -1,5 +1,7 @@
+ package eu.kartoffelquadrat.bookstoreinternals;
+ 
++import org.springframework.web.bind.annotation.*;
++
+ import java.util.Collection;
+ import java.util.LinkedHashMap;
+ import java.util.Map;
+@@ -7,6 +9,7 @@ import java.util.Map;
+ /**
+  * @author Maximilian Schiedermeier
+  */
++@RestController
+ public class AssortmentImpl implements Assortment {
+ 
+     private static Assortment singletonReference = null;
+@@ -41,16 +44,19 @@ public class AssortmentImpl implements Assortment {
+         return singletonReference;
+     }
+ 
++    @GetMapping("/bookstore/isbns")
+     public Collection<Long> getEntireAssortment() {
+         return assortmentMap.keySet();
+     }
+ 
+-    public BookDetailsImpl getBookDetails(Long isbn) {
++    @GetMapping("/bookstore/isbns/{isbn}")
++    public BookDetailsImpl getBookDetails(@PathVariable("isbn") Long isbn) {
+         return assortmentMap.get(isbn);
+     }
+ 
+     @Override
+-    public void addBookToAssortment(BookDetailsImpl bookDetails) {
++    @PutMapping("/bookstore/isbns/{isbn}")
++    public void addBookToAssortment(@RequestBody BookDetailsImpl bookDetails) {
+         if(assortmentMap.containsKey(bookDetails.getIsbn()))
+             throw new RuntimeException("Book can not be indexed, the ISBN conflicts to an existing book.");
+ 
+diff --git a/src/main/java/eu/kartoffelquadrat/bookstoreinternals/CommentsImpl.java b/src/main/java/eu/kartoffelquadrat/bookstoreinternals/CommentsImpl.java
+index b83f78e..d6b92cc 100644
+--- a/src/main/java/eu/kartoffelquadrat/bookstoreinternals/CommentsImpl.java
++++ b/src/main/java/eu/kartoffelquadrat/bookstoreinternals/CommentsImpl.java
+@@ -1,5 +1,7 @@
+ package eu.kartoffelquadrat.bookstoreinternals;
+ 
++import org.springframework.web.bind.annotation.*;
++
+ import java.util.Collections;
+ import java.util.LinkedHashMap;
+ import java.util.Map;
+@@ -9,6 +11,7 @@ import java.util.Map;
+  *
+  * @author Maximilian Schiedermeier
+  */
++@RestController
+ public class CommentsImpl implements Comments {
+ 
+     private static Comments singletonReference = null;
+@@ -40,7 +43,8 @@ public class CommentsImpl implements Comments {
+         return singletonReference;
+     }
+ 
+-    public Map<Long, String> getAllCommentsForBook(long isbn) {
++    @GetMapping("/bookstore/isbns/{isbn}/comments")
++    public Map<Long, String> getAllCommentsForBook(@PathVariable("isbn") long isbn) {
+ 
+         // If there are no comments yet, return new empty map.
+         if (!commentsByIsbn.containsKey(isbn))
+@@ -54,7 +58,8 @@ public class CommentsImpl implements Comments {
+      * Although comments are indexed by IDs, the creation of a new comment does not require an ID, for the ID is a
+      * dynamic / non-global / internal ID.
+      */
+-    public void addComment(long isbn, String comment) {
++    @PostMapping("/bookstore/isbns/{isbn}/comments")
++    public void addComment(@PathVariable("isbn") long isbn, @RequestBody String comment) {
+ 
+         // Verify the comment is not empty
+         if (comment.trim().isEmpty())
+@@ -72,7 +77,8 @@ public class CommentsImpl implements Comments {
+         commentsByIsbn.get(isbn).put(generateCommentId(isbn), comment);
+     }
+ 
+-    public void deleteComment(long isbn, long commentId) {
++    @DeleteMapping("/bookstore/isbns/{isbn}/comments/{commentid}")
++    public void deleteComment(@PathVariable("isbn") long isbn,@PathVariable("commentid") long commentId) {
+ 
+         if (!commentsByIsbn.containsKey(isbn))
+             throw new RuntimeException("Comment can not be removed. No such isbn in assortment: " + isbn);
+@@ -83,7 +89,8 @@ public class CommentsImpl implements Comments {
+         commentsByIsbn.get(isbn).remove(commentId);
+     }
+ 
+-    public void removeAllCommentsForBook(long isbn) {
++    @DeleteMapping("/bookstore/isbns/{isbn}/comments")
++    public void removeAllCommentsForBook(@PathVariable("isbn") long isbn) {
+ 
+         if (!commentsByIsbn.containsKey(isbn))
+             throw new RuntimeException("Comments can not be removed. No such isbn in assortment: " + isbn);
+@@ -91,7 +98,8 @@ public class CommentsImpl implements Comments {
+         commentsByIsbn.remove(isbn);
+     }
+ 
+-    public void editComment(long isbn, long commentId, String updatedComment) {
++    @PostMapping("/bookstore/isbns/{isbn}/comments/{commentid}")
++    public void editComment(@PathVariable("isbn") long isbn, @PathVariable("commentid") long commentId, @RequestBody  String updatedComment) {
+ 
+         // Verify the comment is not empty
+         if (updatedComment.trim().isEmpty())
+diff --git a/src/main/java/eu/kartoffelquadrat/bookstoreinternals/GlobalStockImpl.java b/src/main/java/eu/kartoffelquadrat/bookstoreinternals/GlobalStockImpl.java
+index 7da5632..fe102ff 100644
+--- a/src/main/java/eu/kartoffelquadrat/bookstoreinternals/GlobalStockImpl.java
++++ b/src/main/java/eu/kartoffelquadrat/bookstoreinternals/GlobalStockImpl.java
+@@ -1,5 +1,7 @@
+ package eu.kartoffelquadrat.bookstoreinternals;
+ 
++import org.springframework.web.bind.annotation.*;
++
+ import java.util.Collection;
+ import java.util.LinkedHashMap;
+ import java.util.Map;
+@@ -7,6 +9,7 @@ import java.util.Map;
+ /**
+  * @author Maximilian Schiedermeier
+  */
++@RestController
+ public class GlobalStockImpl implements GlobalStock {
+ 
+     private static GlobalStock singletonReference;
+@@ -47,7 +50,8 @@ public class GlobalStockImpl implements GlobalStock {
+         return singletonReference;
+     }
+ 
+-    public int getStock(String city, Long isbn) {
++    @GetMapping("/bookstore/stocklocations/{stocklocation}/{isbn}")
++    public int getStock(@PathVariable("stocklocation") String city, @PathVariable("isbn") Long isbn) {
+ 
+         if (!stocksPerCity.containsKey(city))
+             throw new RuntimeException("Can not lookup amount in stock. No such city: " + city);
+@@ -55,7 +59,8 @@ public class GlobalStockImpl implements GlobalStock {
+         return stocksPerCity.get(city).getAmount(isbn);
+     }
+ 
+-    public void setStock(String city, Long isbn, Integer amount) {
++    @PostMapping("/bookstore/stocklocations/{stocklocation}/{isbn}")
++    public void setStock(@PathVariable("stocklocation")String city, @PathVariable("isbn") Long isbn, @RequestBody Integer amount) {
+ 
+         if (!stocksPerCity.containsKey(city))
+             throw new RuntimeException("Can not update amount in stock. No such city: " + city);
+@@ -64,12 +69,14 @@ public class GlobalStockImpl implements GlobalStock {
+     }
+ 
+     @Override
++    @GetMapping("/bookstore/stocklocations")
+     public Collection<String> getStoreLocations() {
+         return stocksPerCity.keySet();
+     }
+ 
+     @Override
+-    public Map<Long, Integer> getEntireStoreStock(String city) {
++    @GetMapping("/bookstore/stocklocations/{stocklocation}")
++    public Map<Long, Integer> getEntireStoreStock(@PathVariable("stocklocation") String city) {
+         return stocksPerCity.get(city).getEntireStock();
+     }
+ 
+diff --git a/src/main/java/eu/kartoffelquadrat/bookstoreinternals/RestLauncher.java b/src/main/java/eu/kartoffelquadrat/bookstoreinternals/RestLauncher.java
+new file mode 100644
+index 0000000..bcc4eaa
+--- /dev/null
++++ b/src/main/java/eu/kartoffelquadrat/bookstoreinternals/RestLauncher.java
+@@ -0,0 +1,15 @@
++package eu.kartoffelquadrat.bookstoreinternals;
++
++import org.springframework.boot.SpringApplication;
++import org.springframework.boot.autoconfigure.SpringBootApplication;
++
++/**
++ * This class powers up Spring and ensures the annotated controllers are detected.
++ */
++@SpringBootApplication
++public class RestLauncher {
++    public static void main(String[] args) {
++
++        SpringApplication.run(RestLauncher.class, args);
++    }
++}

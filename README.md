@@ -5,20 +5,22 @@
 Manually RESTified server side java code of a fake Book-Store for academic case studies.
 
 ![version](https://img.shields.io/badge/version-1.0-brightgreen)
+![coverage](https://img.shields.io/badge/coverage-91%25-brightgreen)
 ![building](https://img.shields.io/badge/build-passing-brightgreen)
-
- > Todo: Update pom.xml, update controller classes (launcher already added)
 
 ## About
 
-This is a modified version of the [Bookstore Internals](...). Bookstore functionality has been exposed through a REST interface.
+This is a modified version of the [Bookstore Internals](https://github.com/kartoffelquadrat/BookStoreInternals). Bookstore functionality has been exposed through a REST interface.
 
 ### Changes
 
- * New ```Launcher-Class``` added, to start up Spring-Boot
- * Controllers annotated with [```@RestController``` annotations](markdown/annotations.txt)
- * Controllers annotated with [Resource and Parameter mapping-annoations](markdown/annotations.txt)
- * ```pom.xml``` modified for Spring-Boot support
+ * Compiled changelog
+   * [Launcher](markdown/changelog.md#launcher)
+   * [Spring REST Annotations](markdown/changelog.md#annotations)
+   * [Maven ```pom.xml```](markdown/changelog.md#maven)
+ * Git changelog (Pre-RESTify commit <-> Post-RESTify commit):  
+[```git diff d45b98..8a801```](markdown/restify-diff.txt)
+
 
 ### REST interface layout
 
