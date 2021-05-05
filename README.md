@@ -22,7 +22,7 @@ This is a modified version of the [Bookstore Internals](...). Bookstore function
 
 ### REST interface layout
 
- * [Full API specification as ARC](bookstore.arc)
+ * [Full API specification as ARC](markdown/bookstore.arc)
  * Resource layout visualization:  
 ![RTL](markdown/RTL-bookstore.png#figure)
 
