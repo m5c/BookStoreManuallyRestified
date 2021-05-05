@@ -17,8 +17,7 @@ public class GlobalStockImpl implements GlobalStock {
      */
     public GlobalStockImpl() {
 
-        stocksPerCity = new LinkedHashMap<>();
-        populateWithDummyData();
+        this(true);
     }
 
 
