@@ -1,5 +1,7 @@
 package eu.kartoffelquadrat.bookstoreinternals;
 
+import org.springframework.web.bind.annotation.*;
+
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -9,6 +11,7 @@ import java.util.Map;
  *
  * @author Maximilian Schiedermeier
  */
+@RestController
 public class CommentsImpl implements Comments {
 
     private static Comments singletonReference = null;
@@ -40,7 +43,8 @@ public class CommentsImpl implements Comments {
         return singletonReference;
     }
 
-    public Map<Long, String> getAllCommentsForBook(long isbn) {
+    @GetMapping("/bookstore/isbns/{isbn}/comments")
+    public Map<Long, String> getAllCommentsForBook(@PathVariable("isbn") long isbn) {
 
         // If there are no comments yet, return new empty map.
         if (!commentsByIsbn.containsKey(isbn))
@@ -54,7 +58,8 @@ public class CommentsImpl implements Comments {
      * Although comments are indexed by IDs, the creation of a new comment does not require an ID, for the ID is a
      * dynamic / non-global / internal ID.
      */
-    public void addComment(long isbn, String comment) {
+    @PostMapping("/bookstore/isbns/{isbn}/comments")
+    public void addComment(@PathVariable("isbn") long isbn, @RequestBody String comment) {
 
         // Verify the comment is not empty
         if (comment.trim().isEmpty())
@@ -72,7 +77,8 @@ public class CommentsImpl implements Comments {
         commentsByIsbn.get(isbn).put(generateCommentId(isbn), comment);
     }
 
-    public void deleteComment(long isbn, long commentId) {
+    @DeleteMapping("/bookstore/isbns/{isbn}/comments/{commentid}")
+    public void deleteComment(@PathVariable("isbn") long isbn,@PathVariable("commentid") long commentId) {
 
         if (!commentsByIsbn.containsKey(isbn))
             throw new RuntimeException("Comment can not be removed. No such isbn in assortment: " + isbn);
@@ -83,7 +89,8 @@ public class CommentsImpl implements Comments {
         commentsByIsbn.get(isbn).remove(commentId);
     }
 
-    public void removeAllCommentsForBook(long isbn) {
+    @DeleteMapping("/bookstore/isbns/{isbn}/comments")
+    public void removeAllCommentsForBook(@PathVariable("isbn") long isbn) {
 
         if (!commentsByIsbn.containsKey(isbn))
             throw new RuntimeException("Comments can not be removed. No such isbn in assortment: " + isbn);
@@ -91,7 +98,8 @@ public class CommentsImpl implements Comments {
         commentsByIsbn.remove(isbn);
     }
 
-    public void editComment(long isbn, long commentId, String updatedComment) {
+    @PostMapping("/bookstore/isbns/{isbn}/comments/{commentid}")
+    public void editComment(@PathVariable("isbn") long isbn, @PathVariable("commentid") long commentId, @RequestBody  String updatedComment) {
 
         // Verify the comment is not empty
         if (updatedComment.trim().isEmpty())

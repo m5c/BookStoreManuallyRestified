@@ -1,5 +1,7 @@
 package eu.kartoffelquadrat.bookstoreinternals;
 
+import org.springframework.web.bind.annotation.*;
+
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -7,6 +9,7 @@ import java.util.Map;
 /**
  * @author Maximilian Schiedermeier
  */
+@RestController
 public class AssortmentImpl implements Assortment {
 
     private static Assortment singletonReference = null;
@@ -41,16 +44,19 @@ public class AssortmentImpl implements Assortment {
         return singletonReference;
     }
 
+    @GetMapping("/bookstore/isbns")
     public Collection<Long> getEntireAssortment() {
         return assortmentMap.keySet();
     }
 
-    public BookDetailsImpl getBookDetails(Long isbn) {
+    @GetMapping("/bookstore/isbns/{isbn}")
+    public BookDetailsImpl getBookDetails(@PathVariable("isbn") Long isbn) {
         return assortmentMap.get(isbn);
     }
 
     @Override
-    public void addBookToAssortment(BookDetailsImpl bookDetails) {
+    @PutMapping("/bookstore/isbns/{isbn}")
+    public void addBookToAssortment(@RequestBody BookDetailsImpl bookDetails) {
         if(assortmentMap.containsKey(bookDetails.getIsbn()))
             throw new RuntimeException("Book can not be indexed, the ISBN conflicts to an existing book.");
 

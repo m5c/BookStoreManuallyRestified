@@ -1,5 +1,7 @@
 package eu.kartoffelquadrat.bookstoreinternals;
 
+import org.springframework.web.bind.annotation.*;
+
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -7,6 +9,7 @@ import java.util.Map;
 /**
  * @author Maximilian Schiedermeier
  */
+@RestController
 public class GlobalStockImpl implements GlobalStock {
 
     private static GlobalStock singletonReference;
@@ -47,7 +50,8 @@ public class GlobalStockImpl implements GlobalStock {
         return singletonReference;
     }
 
-    public int getStock(String city, Long isbn) {
+    @GetMapping("/bookstore/stocklocations/{stocklocation}/{isbn}")
+    public int getStock(@PathVariable("stocklocation") String city, @PathVariable("isbn") Long isbn) {
 
         if (!stocksPerCity.containsKey(city))
             throw new RuntimeException("Can not lookup amount in stock. No such city: " + city);
@@ -55,7 +59,8 @@ public class GlobalStockImpl implements GlobalStock {
         return stocksPerCity.get(city).getAmount(isbn);
     }
 
-    public void setStock(String city, Long isbn, Integer amount) {
+    @PostMapping("/bookstore/stocklocations/{stocklocation}/{isbn}")
+    public void setStock(@PathVariable("stocklocation")String city, @PathVariable("isbn") Long isbn, @RequestBody Integer amount) {
 
         if (!stocksPerCity.containsKey(city))
             throw new RuntimeException("Can not update amount in stock. No such city: " + city);
@@ -64,12 +69,14 @@ public class GlobalStockImpl implements GlobalStock {
     }
 
     @Override
+    @GetMapping("/bookstore/stocklocations")
     public Collection<String> getStoreLocations() {
         return stocksPerCity.keySet();
     }
 
     @Override
-    public Map<Long, Integer> getEntireStoreStock(String city) {
+    @GetMapping("/bookstore/stocklocations/{stocklocation}")
+    public Map<Long, Integer> getEntireStoreStock(@PathVariable("stocklocation") String city) {
         return stocksPerCity.get(city).getEntireStock();
     }
 

@@ -5,7 +5,7 @@
     <artifactId>bookstoreinternals</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>bookstoreinternals</name>
+    <name>bookstoremanualrest</name>
     <url>http://maven.apache.org</url>
 
     <properties>
@@ -14,6 +14,12 @@
 	<source>8</source>
     </properties>
 
+    <!-- this parent block lets this maven project extend a prepared spring specific template.-->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.3.0.RELEASE</version>
+    </parent>
 
     <!-- main developer -->
     <developers>
@@ -35,6 +41,14 @@
     </licenses>
 
     <dependencies>
+
+        <!-- This block adds spring boot as a dependency, so we can use the parent pom configuration and non-standard annotations.-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <version>2.3.0.RELEASE</version>
+        </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -45,7 +59,7 @@
 
     <build>
         <!-- Override default name of generated jars -->
-        <finalName>BookStore</finalName>
+        <finalName>BookStoreManualRest</finalName>
 
         <plugins>
             <!-- set compiler version -->
@@ -63,37 +77,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.2</version>
-            </plugin>
-
-            <!-- specify main class for exec goal -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.6.0</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <mainClass>eu.kartoffelquadrat.bookstoreinternals.DesktopLauncher</mainClass>
-                </configuration>
-            </plugin>
-
-            <!-- specify main class for JAR manifest-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.0</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>eu.kartoffelquadrat.bookstoreinternals.DesktopLauncher</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
             </plugin>
 
             <!-- add sources -->
@@ -125,6 +108,23 @@
                     </execution>
                 </executions>
             </plugin>
+
+	    <!-- Spring specific build plugin, produces self contained JAR with default launcher class.-->
+	    <plugin>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-maven-plugin</artifactId>
+		<configuration>
+		    <fork>true</fork>
+		    <mainClass>eu.kartoffelquadrat.bookstoreinternals.RestLauncher</mainClass>
+		</configuration>
+		<executions>
+		    <execution>
+			<goals>
+			    <goal>repackage</goal>
+			</goals>
+		    </execution>
+		</executions>
+	    </plugin>
         </plugins>
     </build>
 </project>
