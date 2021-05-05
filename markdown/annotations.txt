@@ -1,0 +1,29 @@
+Full list of annotations added for manual RESTify:
+
+schieder@Celadon:bookstore $ grep -nre "@" .
+./GlobalStockController.java:20:@RestController
+./GlobalStockController.java:25:    @GetMapping("/bookstore/stocks/{location}/{ISBN}")
+./GlobalStockController.java:26:    public int getStock(@PathVariable("location") String arg0, @PathVariable("ISBN") Long arg1) {
+./GlobalStockController.java:33:    @PostMapping("/bookstore/stocks/{location}/{ISBN}")
+./GlobalStockController.java:34:    public void setStock(@PathVariable("location") String arg0, @PathVariable("ISBN") Long arg1, @RequestBody Integer arg2) {
+./GlobalStockController.java:40:    @GetMapping("/bookstore/stocks")
+./GlobalStockController.java:48:    @GetMapping("/bookstore/stocks/{location}")
+./GlobalStockController.java:49:    public Map<Long, Integer> getEntireStoreStock(@PathVariable("location") String arg0) {
+./BookStoreLauncher.java:13:@SpringBootApplication
+./AssortmentController.java:19:@RestController
+./AssortmentController.java:24:    @GetMapping("/bookstore")
+./AssortmentController.java:32:    @GetMapping("/bookstore/isbns/{ISBN}")
+./AssortmentController.java:33:    public BookDetailsImpl getBookDetails(@PathVariable("ISBN") Long arg0) {
+./AssortmentController.java:40:    @PutMapping("/bookstore/isbns/{ISBN}")
+./AssortmentController.java:41:    public void addBookToAssortment(@RequestBody BookDetailsImpl arg0) {
+./CommentsController.java:18:@RestController
+./CommentsController.java:23:    @GetMapping("/bookstore/isbns/{ISBN}/comments")
+./CommentsController.java:24:    public Map<Long, String> getAllCommentsForBook(@PathVariable("ISBN") long arg0) {
+./CommentsController.java:31:    @PostMapping("/bookstore/isbns/{ISBN}/comments")
+./CommentsController.java:32:    public void addComment(@PathVariable("ISBN") long arg0, @RequestBody String arg1) {
+./CommentsController.java:38:    @DeleteMapping("/bookstore/isbns/{ISBN}/comments/{commentid}")
+./CommentsController.java:39:    public void deleteComment(@PathVariable("ISBN") long arg0, @PathVariable("commentid") long arg1) {
+./CommentsController.java:45:    @DeleteMapping("/bookstore/isbns/{ISBN}/comments")
+./CommentsController.java:46:    public void removeAllCommentsForBook(@PathVariable("ISBN") long arg0) {
+./CommentsController.java:52:    @PostMapping("/bookstore/isbns/{ISBN}/comments/{commentid}")
+./CommentsController.java:53:    public void editComment(@PathVariable("ISBN") long arg0, @PathVariable("commentid") long arg1, @RequestBody String arg2) {
