@@ -15,7 +15,11 @@ public class GlobalStockImpl implements GlobalStock {
     /**
      * Public default constructor for frameworks that automatically initialize beans as singletons.
      */
-    public GlobalStockImpl() {}
+    public GlobalStockImpl() {
+
+        stocksPerCity = new LinkedHashMap<>();
+        populateWithDummyData();
+    }
 
 
     /**
