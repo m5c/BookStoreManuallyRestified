@@ -29,33 +29,33 @@ public class RestLauncher {
 Search for annotations in RESTified source code. (Non spring annotations filtered)
 
 ```bash
-$ grep -nre "@" src | grep -v "author" | grep -v "param" | grep -v "return" | grep -v "Override" | grep -v "Test"
-src/main/java/eu/kartoffelquadrat/bookstoreinternals/AssortmentImpl.java:12:@RestController
-src/main/java/eu/kartoffelquadrat/bookstoreinternals/AssortmentImpl.java:47:    @GetMapping("/bookstore/isbns")
-src/main/java/eu/kartoffelquadrat/bookstoreinternals/AssortmentImpl.java:52:    @GetMapping("/bookstore/isbns/{isbn}")
-src/main/java/eu/kartoffelquadrat/bookstoreinternals/AssortmentImpl.java:53:    public BookDetailsImpl getBookDetails(@PathVariable("isbn") Long isbn) {
-src/main/java/eu/kartoffelquadrat/bookstoreinternals/AssortmentImpl.java:58:    @PutMapping("/bookstore/isbns/{isbn}")
-src/main/java/eu/kartoffelquadrat/bookstoreinternals/AssortmentImpl.java:59:    public void addBookToAssortment(@RequestBody BookDetailsImpl bookDetails) {
-src/main/java/eu/kartoffelquadrat/bookstoreinternals/RestLauncher.java:9:@SpringBootApplication
-src/main/java/eu/kartoffelquadrat/bookstoreinternals/GlobalStockImpl.java:12:@RestController
-src/main/java/eu/kartoffelquadrat/bookstoreinternals/GlobalStockImpl.java:53:    @GetMapping("/bookstore/stocklocations/{stocklocation}/{isbn}")
-src/main/java/eu/kartoffelquadrat/bookstoreinternals/GlobalStockImpl.java:54:    public int getStock(@PathVariable("stocklocation") String city, @PathVariable("isbn") Long isbn) {
-src/main/java/eu/kartoffelquadrat/bookstoreinternals/GlobalStockImpl.java:62:    @PostMapping("/bookstore/stocklocations/{stocklocation}/{isbn}")
-src/main/java/eu/kartoffelquadrat/bookstoreinternals/GlobalStockImpl.java:63:    public void setStock(@PathVariable("stocklocation")String city, @PathVariable("isbn") Long isbn, @RequestBody Integer amount) {
-src/main/java/eu/kartoffelquadrat/bookstoreinternals/GlobalStockImpl.java:72:    @GetMapping("/bookstore/stocklocations")
-src/main/java/eu/kartoffelquadrat/bookstoreinternals/GlobalStockImpl.java:78:    @GetMapping("/bookstore/stocklocations/{stocklocation}")
-src/main/java/eu/kartoffelquadrat/bookstoreinternals/GlobalStockImpl.java:79:    public Map<Long, Integer> getEntireStoreStock(@PathVariable("stocklocation") String city) {
-src/main/java/eu/kartoffelquadrat/bookstoreinternals/CommentsImpl.java:14:@RestController
-src/main/java/eu/kartoffelquadrat/bookstoreinternals/CommentsImpl.java:46:    @GetMapping("/bookstore/isbns/{isbn}/comments")
-src/main/java/eu/kartoffelquadrat/bookstoreinternals/CommentsImpl.java:47:    public Map<Long, String> getAllCommentsForBook(@PathVariable("isbn") long isbn) {
-src/main/java/eu/kartoffelquadrat/bookstoreinternals/CommentsImpl.java:61:    @PostMapping("/bookstore/isbns/{isbn}/comments")
-src/main/java/eu/kartoffelquadrat/bookstoreinternals/CommentsImpl.java:62:    public void addComment(@PathVariable("isbn") long isbn, @RequestBody String comment) {
-src/main/java/eu/kartoffelquadrat/bookstoreinternals/CommentsImpl.java:80:    @DeleteMapping("/bookstore/isbns/{isbn}/comments/{commentid}")
-src/main/java/eu/kartoffelquadrat/bookstoreinternals/CommentsImpl.java:81:    public void deleteComment(@PathVariable("isbn") long isbn,@PathVariable("commentid") long commentId) {
-src/main/java/eu/kartoffelquadrat/bookstoreinternals/CommentsImpl.java:92:    @DeleteMapping("/bookstore/isbns/{isbn}/comments")
-src/main/java/eu/kartoffelquadrat/bookstoreinternals/CommentsImpl.java:93:    public void removeAllCommentsForBook(@PathVariable("isbn") long isbn) {
-src/main/java/eu/kartoffelquadrat/bookstoreinternals/CommentsImpl.java:101:    @PostMapping("/bookstore/isbns/{isbn}/comments/{commentid}")
-src/main/java/eu/kartoffelquadrat/bookstoreinternals/CommentsImpl.java:102:    public void editComment(@PathVariable("isbn") long isbn, @PathVariable("commentid") long commentId, @RequestBody  String updatedComment) {
+$ grep -nre "@" src | grep -v "author" | grep -v "param" | grep -v "return" | grep -v "Override" | grep -v "Test" | cut -f3 -d":" | sed 's/\ \ \ \ //' | sort
+@DeleteMapping("/bookstore/isbns/{isbn}/comments")
+@DeleteMapping("/bookstore/isbns/{isbn}/comments/{commentid}")
+@GetMapping("/bookstore/isbns")
+@GetMapping("/bookstore/isbns/{isbn}")
+@GetMapping("/bookstore/isbns/{isbn}/comments")
+@GetMapping("/bookstore/stocklocations")
+@GetMapping("/bookstore/stocklocations/{stocklocation}")
+@GetMapping("/bookstore/stocklocations/{stocklocation}/{isbn}")
+@PostMapping("/bookstore/isbns/{isbn}/comments")
+@PostMapping("/bookstore/isbns/{isbn}/comments/{commentid}")
+@PostMapping("/bookstore/stocklocations/{stocklocation}/{isbn}")
+@PutMapping("/bookstore/isbns/{isbn}")
+@RestController
+@RestController
+@RestController
+@SpringBootApplication
+public BookDetailsImpl getBookDetails(@PathVariable("isbn") Long isbn) {
+public Map<Long, Integer> getEntireStoreStock(@PathVariable("stocklocation") String city) {
+public Map<Long, String> getAllCommentsForBook(@PathVariable("isbn") long isbn) {
+public int getStock(@PathVariable("stocklocation") String city, @PathVariable("isbn") Long isbn) {
+public void addBookToAssortment(@RequestBody BookDetailsImpl bookDetails) {
+public void addComment(@PathVariable("isbn") long isbn, @RequestBody String comment) {
+public void deleteComment(@PathVariable("isbn") long isbn,@PathVariable("commentid") long commentId) {
+public void editComment(@PathVariable("isbn") long isbn, @PathVariable("commentid") long commentId, @RequestBody  String updatedComment) {
+public void removeAllCommentsForBook(@PathVariable("isbn") long isbn) {
+public void setStock(@PathVariable("stocklocation")String city, @PathVariable("isbn") Long isbn, @RequestBody Integer amount) {
 ```
 
 ## Maven
