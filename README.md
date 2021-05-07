@@ -14,12 +14,13 @@ This is a modified version of the [Bookstore Internals](https://github.com/karto
 
 ### Changes
 
- * Compiled changelog
+ * Condensed changelog
    * [Launcher](markdown/changelog.md#launcher)
    * [Spring REST Annotations](markdown/changelog.md#annotations)
    * [Maven ```pom.xml```](markdown/changelog.md#maven)
  * Git changelog (Pre-RESTify commit <-> Post-RESTify commit):  
 [```git diff d45b98..8a801```](markdown/restify-diff.txt)
+ * [Statistics](markdown/stats.md) of code modifications.
 
 
 ### REST interface layout
