@@ -48,9 +48,34 @@ public void removeAllCommentsForBook(@PathVariable("isbn") long isbn) {
 public void setStock(@PathVariable("stocklocation")String city, @PathVariable("isbn") Long isbn, @RequestBody Integer amount) {
 ```
 
- > Note: Intentionally no parameters of type "*request*" used for parameter mappings. (For comparability with generated code.
+ > Note: Intentionally no parameters of type "*request*" used for parameter mappings. (For comparability with generated code of FIDDLR version).
 
-## Stats
+## Statistics
+
+### Codebase
+
+#### NLOC
+
+Netto lines of code, counted using [cloc](https://github.com/AlDanial/cloc).
+
+| Matter | Files | Blank | Comment | NLOC |
+|---|---|---|---|---|
+| Legacy Bookstore, Java | 10 | 133 | 195 | 327 |
+| RESTful Bookstore, Java |  10 | 135 | 189 | 337 |
+| Legacy Bookstore, Maven | 1 | 12 | 9 | 109 |
+| RESTful Bookstore, Maven | 1 | 13 | 10 | 107 |
+
+ > Unit tests excluded were excluded of stats.
+
+#### Files
+
+ * 10 Java files per codebase.
+ * 1 Java file replaced, 3 Java files modified.
+
+#### Methods except launcher
+
+ * ? total methods
+ * ? methods modified
 
 ### Annotations
 
@@ -58,14 +83,15 @@ Total annotations added:
 
 | Annotation Type | Amount |
 |---|---|
-| Boilerplate | 4 |
-| CRUD-Operation / method mapping | 11 |
 | Parameter mapping | 17 |
+| CRUD-Operation / method mapping | 11 |
+| Boilerplate | 4 |
 
 ### Lines added / modified / removed
 
 | Kind | Added / Modified / Removed |
 |---|---|
+| Legacy Launcher | - / - / 31 | 
 | New Launcher | 10 / - / - |
 | Annotations | 14 / 10 / - |
 | Maven configuration | 25 / 2 / 27|
