@@ -12,6 +12,7 @@ import java.util.Map;
  * @author Maximilian Schiedermeier
  */
 @RestController
+@CrossOrigin
 public class CommentsImpl implements Comments {
 
     private static Comments singletonReference = null;

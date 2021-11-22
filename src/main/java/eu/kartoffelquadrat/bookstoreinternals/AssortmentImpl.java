@@ -10,6 +10,7 @@ import java.util.Map;
  * @author Maximilian Schiedermeier
  */
 @RestController
+@CrossOrigin
 public class AssortmentImpl implements Assortment {
 
     private static Assortment singletonReference = null;

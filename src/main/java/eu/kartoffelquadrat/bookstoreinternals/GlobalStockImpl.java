@@ -10,6 +10,7 @@ import java.util.Map;
  * @author Maximilian Schiedermeier
  */
 @RestController
+@CrossOrigin
 public class GlobalStockImpl implements GlobalStock {
 
     private static GlobalStock singletonReference;
