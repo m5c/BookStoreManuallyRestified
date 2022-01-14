@@ -3,25 +3,12 @@
 <link rel="stylesheet" type="text/css" media="all" href="markdown/figure.css" />
 
 Manually RESTified server side java code of a fake Book-Store for academic case studies.
-
-![version](https://img.shields.io/badge/version-1.0-brightgreen)
-![coverage](https://img.shields.io/badge/coverage-91%25-brightgreen)
-![building](https://img.shields.io/badge/build-passing-brightgreen)
+This implementation imitates the expected output of a Spring-based RESTify concern. All controllers act as proxy methods.
 
 ## About
 
-This is a modified version of the [Bookstore Internals](https://github.com/kartoffelquadrat/BookStoreInternals). Bookstore functionality has been exposed through a REST interface.
-
-### Changes
-
- * Condensed changelog
-   * [Launcher](markdown/changelog.md#launcher)
-   * [Spring REST Annotations](markdown/changelog.md#annotations)
-   * [Maven ```pom.xml```](markdown/changelog.md#maven)
- * Git changelog (Pre-RESTify commit <-> Post-RESTify commit):  
-[```git diff d45b98..8a801```](markdown/restify-diff.txt)
- * [Statistics](markdown/stats.md) of code modifications.
-
+A RESTful version of the bookstore. Added controllers act as proxies. Only Proxies, a Spring specific launcher class and a Spring specific ```pom.xml``` were added.  
+This software uses the original BookStore as maven dependency. To use this RESTful service, you must therefore first [compile the BookStore internals in *package* mode](https://github.com/kartoffelquadrat/BookStoreInternals#invokation).
 
 ### REST interface layout
 
